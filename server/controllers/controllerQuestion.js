@@ -1,5 +1,6 @@
 'use strict'
 const Question = require('../models/Question')
+const Answer = require('../models/Answer')
 
 module.exports = class ControllerQuestion {
   constructor() {
@@ -8,11 +9,31 @@ module.exports = class ControllerQuestion {
 
   static getAll (req, res) {
     Question.find()
-    .populate()
-      .then(questions => res.status(200).send({
-        msg: 'get all question success',
-        questions
-      }))
+    .populate('userId')
+      .then(questions => {
+        Answer.find()
+        .populate('userId')
+          .then(answers => {
+            let arrQuestions = []
+            questions.forEach(q => {
+              let arrAnswers = []
+              answers.forEach(a => {
+                if (JSON.stringify(q._id) == JSON.stringify(a.questionId)) {
+                  arrAnswers.push(a)
+                }
+              })
+              q.answers = arrAnswers
+            })
+            res.status(200).send({
+              msg: 'got data questions',
+              questions
+            })
+          })
+          .catch(err => res.status(500).send({
+            msg: 'error bang',
+            err
+          }))
+      })
       .catch(err => res.status(500).send(err))
   }
 

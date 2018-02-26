@@ -11,7 +11,8 @@ var questionSchema = new Schema({
   },
   votes: [{
     type: Schema.Types.ObjectId, ref: 'User'
-  }]
+  }],
+  answers: []
 }, {
   timestamps: true
 })
