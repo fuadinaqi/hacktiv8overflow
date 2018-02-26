@@ -3,8 +3,24 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+import axios from 'axios'
+import Buefy from 'buefy'
+import VueParticles from 'vue-particles'
+import swal from 'sweetalert'
+
+import 'buefy/lib/buefy.css'
+
+Vue.use(Buefy)
+Vue.use(VueParticles)
 
 Vue.config.productionTip = false
+
+Vue.prototype.$swal = swal
+Vue.prototype.$axios = axios.create({
+  baseURL: 'http://localhost:3000/'
+})
+Vue.prototype.$store = store
 
 /* eslint-disable no-new */
 new Vue({

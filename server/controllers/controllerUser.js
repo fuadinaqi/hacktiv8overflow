@@ -23,6 +23,7 @@ module.exports = class ControllerUser {
     })
       .then(user => {
         if (user) {
+          console.log(user, 'ini user')
           if (user.password === req.body.password) {
             jwt.sign({data: user}, process.env.SECRET_KEY, (err, token) => {
               res.status(200).send({

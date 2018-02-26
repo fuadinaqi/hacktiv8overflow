@@ -14,7 +14,11 @@ var answerSchema = new Schema({
   },
   votes: [{
     type: Schema.Types.ObjectId, ref: 'User'
-  }]
+  }],
+  point: {
+    type: Number,
+    default: 0
+  }
 }, {
   timestamps: true
 })
