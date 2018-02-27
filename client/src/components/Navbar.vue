@@ -3,7 +3,7 @@
     <nav class="navbar is-dark">
       <div class="navbar-brand">
         <router-link class="navbar-item" :to="{ path: '/' }">
-          <img src="https://bulma.io/images/bulma-logo-white.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+          <span class="tag is-info is-rounded">Naqi-overflow</span>
         </router-link>
         <div @click="setNavbur" class="navbar-burger burger" data-target="navMenuColordark-example">
           <span></span>

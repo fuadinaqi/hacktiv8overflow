@@ -1,6 +1,7 @@
 'use strict'
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('../helpers/nodemailer');
 require('dotenv').config()
 
 module.exports = class ControllerUser {
@@ -23,7 +24,6 @@ module.exports = class ControllerUser {
     })
       .then(user => {
         if (user) {
-          console.log(user, 'ini user')
           if (user.password === req.body.password) {
             jwt.sign({data: user}, process.env.SECRET_KEY, (err, token) => {
               res.status(200).send({
@@ -50,10 +50,13 @@ module.exports = class ControllerUser {
       email: req.body.email,
       password: req.body.password
     })
-      .then(userCreate => res.status(200).send({
-        msg: 'user create success',
-        userCreate
-      }))
+      .then(userCreate => {
+        nodemailer(req.body.email)
+        res.status(200).send({
+          msg: 'user create success',
+          userCreate
+        })
+      })
       .catch(err => res.status(500).send(err))
   }
 

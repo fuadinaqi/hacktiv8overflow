@@ -28,9 +28,20 @@
           <button @click="showingAnswer(q._id)" v-if="!showAnswers" class="button is-primary is-rounded">Show all answers</button>
           <button @click="unshowingAnswer(q._id)" v-if="showAnswers" class="button is-primary is-danger">Unshow</button>
         </div> -->
+        <button v-if="q._id !== questId" @click="showAnswer(q._id)" class="button is-primary">Show Answers</button>
+        <button v-if="q._id === questId" @click="showAnswer(q._id)" class="button is-primary">Hide Answers</button>
         <br>
-        <!-- <button @click="showAnswer(q._id)" class="button is-primary">Answer this!</button> -->
-        <Answer :q="q" :index="i"/>
+        <Answer v-show="q._id === questId" :q="q"/>
+        <br>
+        <div class="answer">
+          <div class="field">
+            <div class="control">
+              <textarea v-model="answerAdd[i]" class="textarea" placeholder="Write your answer here.."></textarea>
+            </div>
+            <br>
+            <button @click="answerCreate(q._id, i)" class="button is-success is-rounded">Answer!</button>
+          </div>
+        </div>
       </article>
     </div>
   </div>
@@ -46,9 +57,41 @@ export default {
   },
   data () {
     return {
+      answerAdd: [],
+      questId: ''
     }
   },
   methods: {
+    answerCreate (questionId, i) {
+      let self = this
+      this.$axios.post(`answers/${questionId}`, {
+        answer: self.answerAdd[i]
+      }, {
+        headers: { token: self.$store.getters.getToken }
+      })
+        .then(({data}) => {
+          let questionUpdate = self.questions
+          // console.log(data)
+          questionUpdate.forEach((q, i) => {
+            if (q._id === questionId) {
+              questionUpdate[i].answers.push(data.answerCreate)
+            }
+          })
+          self.answerAdd = []
+          self.$store.dispatch('setQuestions', questionUpdate)
+          self.$swal('you have answer this questions!', {
+            icon: 'success'
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          self.$swal('you must login first to answer!', {
+            icon: 'warning'
+          })
+          self.answerAdd = []
+          self.$router.push('/login')
+        })
+    },
     setThumbs (question, isThumb) {
       let self = this
       this.$axios.put(`questions/vote/${question._id}`, {
@@ -78,6 +121,13 @@ export default {
           })
           console.log(err)
         })
+    },
+    showAnswer (questionId) {
+      if (this.questId === questionId) {
+        this.questId = ''
+      } else {
+        this.questId = questionId
+      }
     }
   },
   created () {

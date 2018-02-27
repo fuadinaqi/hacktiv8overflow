@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     token: null,
     questions: null,
-    isLogin: false
+    isLogin: false,
+    userId: ''
   },
   mutations: {
     setToken (state, payload) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     setLogin (state, payload) {
       state.isLogin = payload
+    },
+    setUserId (state, payload) {
+      state.userId = payload
     }
   },
   actions: {
@@ -29,6 +33,9 @@ export default new Vuex.Store({
     },
     setLogin ({ commit }, payload) {
       commit('setLogin', payload)
+    },
+    setUserId ({ commit }, payload) {
+      commit('setUserId', payload)
     }
   },
   getters: {
@@ -39,6 +46,9 @@ export default new Vuex.Store({
       if (state.questions) {
         return state.questions.reverse()
       }
+    },
+    getUserId (state) {
+      return state.userId
     }
   }
 })

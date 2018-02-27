@@ -19,16 +19,7 @@
         {{ a.answer }}
       </div>
     </article>
-    <button @click="showAnswer(q._id)" class="button is-primary">Answer this!</button>
-    <div v-show="q._id === questId" class="answer">
-      <div class="field">
-        <div class="control">
-          <textarea v-model="answerAdd[index]" class="textarea" placeholder="Write your answer here.."></textarea>
-        </div>
-        <br>
-        <button @click="answerCreate(q._id, index)" class="button is-success is-rounded">Answer!</button>
-      </div>
-    </div>
+    <!-- <button @click="showAnswer(q._id)" class="button is-primary">Answer this!</button> -->
   </div>
 </template>
 
@@ -36,46 +27,13 @@
 export default {
   name: 'answer',
   props: [
-    'q',
-    'index'
+    'q'
   ],
   data () {
     return {
-      answerAdd: [],
-      questId: ''
     }
   },
   methods: {
-    answerCreate (questionId, i) {
-      let self = this
-      this.$axios.post(`answers/${questionId}`, {
-        answer: self.answerAdd[i]
-      }, {
-        headers: { token: self.$store.getters.getToken }
-      })
-        .then(({data}) => {
-          let questionUpdate = self.questions
-          // console.log(data)
-          questionUpdate.forEach((q, i) => {
-            if (q._id === questionId) {
-              questionUpdate[i].answers.push(data.answerCreate)
-            }
-          })
-          self.answerAdd = []
-          self.$store.dispatch('setQuestions', questionUpdate)
-          self.$swal('you have answer this questions!', {
-            icon: 'success'
-          })
-        })
-        .catch(err => {
-          console.log(err)
-          self.$swal('you must login first to answer!', {
-            icon: 'warning'
-          })
-          self.answerAdd = []
-          self.$router.push('/login')
-        })
-    },
     setThumbs (question, answer, isThumb) {
       let self = this
       this.$axios.put(`answers/${question._id}/${answer._id}`, {
@@ -109,16 +67,10 @@ export default {
           })
           console.log(err)
         })
-    },
-    showAnswer (questionId) {
-      if (this.questId === questionId) {
-        this.questId = ''
-      } else {
-        this.questId = questionId
-      }
     }
   },
   created () {
+    this.getUserInfo()
   },
   computed: {
     questions () {
