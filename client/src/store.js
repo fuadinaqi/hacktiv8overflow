@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: null,
-    questions: null
+    questions: null,
+    isLogin: false
   },
   mutations: {
     setToken (state, payload) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setQuestions (state, payload) {
       state.questions = payload
+    },
+    setLogin (state, payload) {
+      state.isLogin = payload
     }
   },
   actions: {
@@ -22,6 +26,9 @@ export default new Vuex.Store({
     },
     setQuestions ({ commit }, payload) {
       commit('setQuestions', payload)
+    },
+    setLogin ({ commit }, payload) {
+      commit('setLogin', payload)
     }
   },
   getters: {
@@ -29,7 +36,9 @@ export default new Vuex.Store({
       return state.token
     },
     getQuestions (state) {
-      return state.questions
+      if (state.questions) {
+        return state.questions.reverse()
+      }
     }
   }
 })

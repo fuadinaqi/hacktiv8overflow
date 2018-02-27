@@ -6,6 +6,7 @@ var middleware = require('../middleware/authLogin')
 router.get('/', middleware.authLogin, controllerUser.getAll)
 router.post('/signup', controllerUser.signup)
 router.post('/signin', controllerUser.signin)
+router.get('/profile', middleware.authLogin, controllerUser.getProfile)
 router.put('/:id', middleware.authLogin, controllerUser.edit)
 router.delete('/:id', middleware.authLogin, controllerUser.destroy)
 

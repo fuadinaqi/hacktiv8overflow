@@ -39,11 +39,17 @@ module.exports = class ControllerAnswer {
           let findVoter = answer.votes.filter(q => {
             return q == req.headers.userId
           })
-          if (findVoter) {
+          if (findVoter.length > 0) {
             return res.status(500).send({
               msg: 'anda sudah vote'
             })
           }
+        }
+        answer.votes.push(req.headers.userId)
+        if (req.body.thumbsUp) {
+          answer.point++
+        } else {
+          answer.point--
         }
         answer.votes.push(req.headers.userId)
         answer.save()

@@ -5,6 +5,10 @@ var questionSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId, ref: 'User'
   },
+  title: {
+    type: String,
+    required: true
+  },
   question: {
     type: String,
     required: true

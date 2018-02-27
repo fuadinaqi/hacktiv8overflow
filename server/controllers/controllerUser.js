@@ -87,4 +87,15 @@ module.exports = class ControllerUser {
       }))
       .catch(err => res.status(500).send(err))
   }
+
+  static getProfile (req, res) {
+    User.findOne({
+      '_id': req.headers.userId
+    })
+      .then(userProfile => res.status(200).send({
+        msg: 'get user profile data is succeed',
+        userProfile
+      }))
+      .catch(err => res.status(500).send(err))
+  }
 }

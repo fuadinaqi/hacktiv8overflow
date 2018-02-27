@@ -44,43 +44,51 @@
             </div>
           </div>
         </div>
-        <section class="hero is-info">
-          <div class="hero-body">
-            <div class="container">
-              <h2 class="subtitle">
-                Don't have an account?
-              </h2>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <section class="hero is-info">
+            <div class="hero-body">
+              <div class="container">
+                <h2 class="subtitle">
+                  Don't have an account?
+                </h2>
+              </div>
             </div>
-          </div>
-          <div class="tile is-ancestor">
-            <div class="tile is-parent">
-              <article class="tile is-child notification is-success">
-                <div class="content">
-                  Sign Up here
-                </div>
-              </article>
+            <div class="tile is-ancestor">
+              <div class="tile is-parent">
+                <article class="tile is-child notification is-success">
+                  <div class="content">
+                    Sign Up here
+                  </div>
+                </article>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
+      </div>
+      <div class="columns">
         <div class="column">
           <div class="loginform">
             <div class="field">
               <p class="control has-icons-left has-icons-right">
-                <input v-model="dataSignup.email" class="input" type="email" placeholder="Email">
+                <input v-model="dataSignup.email" :class="emailVal" type="email" placeholder="Email">
                 <span class="icon is-small is-left">
                   <i class="fas fa-envelope"></i>
                 </span>
-                <span class="icon is-small is-right">
+                <span v-if="!isEmail" class="icon is-small is-right">
                   <i class="fas fa-check"></i>
                 </span>
+                <p v-if="isEmail" class="help is-danger">email must be valid</p>
               </p>
             </div>
             <div class="field">
               <p class="control has-icons-left">
-                <input v-model="dataSignup.password" class="input" type="password" placeholder="Password">
+                <input v-model="dataSignup.password" :class="pswFirst" type="password" placeholder="Password">
                 <span class="icon is-small is-left">
                   <i class="fas fa-lock"></i>
                 </span>
+                <p v-if="isPassword" class="help is-danger">password at least contain more than 8 characters</p>
               </p>
             </div>
             <div class="field">
@@ -119,7 +127,11 @@ export default {
         email: '',
         password: ''
       },
-      psw: 'input'
+      pswFirst: 'input',
+      psw: 'input',
+      isPassword: false,
+      isEmail: false,
+      emailVal: 'input'
     }
   },
   methods: {
@@ -178,6 +190,10 @@ export default {
           icon: 'warning'
         })
       }
+    },
+    validEmail (email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ // eslint-disable-line no-useless-escape
+      return re.test(email)
     }
   },
   created () {
@@ -186,12 +202,40 @@ export default {
     passwordConfirmation (value) {
       if (value.length > 0) {
         if (value !== this.dataSignup.password) {
-          this.psw += ' is-danger'
+          this.psw = 'input is-danger'
         } else {
-          this.psw = 'input'
+          this.psw = 'input is-success'
         }
       } else {
         this.psw = 'input'
+      }
+    },
+    'dataSignup.password' (value) {
+      if (value.length > 0) {
+        if (value.length < 8) {
+          this.pswFirst = 'input is-danger'
+          this.isPassword = true
+        } else {
+          this.pswFirst = 'input is-success'
+          this.isPassword = false
+        }
+      } else {
+        this.pswFirst = 'input'
+        this.isPassword = false
+      }
+    },
+    'dataSignup.email' (value) {
+      if (value.length > 0) {
+        if (this.validEmail(value)) {
+          this.emailVal = 'input is-success'
+          this.isEmail = false
+        } else {
+          this.emailVal = 'input is-danger'
+          this.isEmail = true
+        }
+      } else {
+        this.emailVal = 'input'
+        this.isEmail = false
       }
     }
   }

@@ -39,6 +39,7 @@ module.exports = class ControllerQuestion {
 
   static create (req, res) {
     Question.create({
+      title: req.body.title,
       question: req.body.question,
       userId: req.headers.userId
     })
@@ -58,17 +59,53 @@ module.exports = class ControllerQuestion {
           let findVoter = question.votes.filter(q => {
             return q == req.headers.userId
           })
-          if (findVoter) {
+          if (findVoter.length > 0) {
             return res.status(500).send({
               msg: 'anda sudah vote'
             })
           }
         }
         question.votes.push(req.headers.userId)
+        if (req.body.thumbsUp) {
+          question.point++
+        } else {
+          question.point--
+        }
         question.save()
           .then(questionSave => res.status(200).send({
             msg: 'vote succeed',
             questionSave
+          }))
+          .catch(err => res.status(500).send(err))
+      })
+      .catch(err => res.status(500).send(err))
+  }
+
+  static getById (req, res) {
+    Question.find({
+      'userId': req.headers.userId
+    })
+      .then(questions => res.status(200).send({
+        msg: 'get question profile succeed',
+        questions
+      }))
+      .catch(err => res.status(500).send(err))
+  }
+
+  static edit (req, res) {
+    Question.findOneAndUpdate({
+      '_id': req.params.id
+    }, {
+      title: req.body.title,
+      question: req.body.question
+    })
+      .then(isEdit => {
+        Question.findOne({
+          '_id': req.params.id
+        })
+          .then(questionEdited => res.status(200).send({
+            msg: 'edit success',
+            questionEdited
           }))
           .catch(err => res.status(500).send(err))
       })
