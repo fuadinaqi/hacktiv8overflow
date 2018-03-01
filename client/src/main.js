@@ -18,7 +18,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$swal = swal
 Vue.prototype.$axios = axios.create({
-  baseURL: 'http://localhost:3000/'
+  baseURL: 'http://35.198.230.193:3003/'
 })
 Vue.prototype.$store = store
 

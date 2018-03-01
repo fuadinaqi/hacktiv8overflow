@@ -10,7 +10,7 @@ var mongoose = require('mongoose')
 var bcrypt = require('bcrypt')
 
 require('dotenv').config()
-mongoose.connect('mongodb://localhost/hacktiv8overflow')
+mongoose.connect('mongodb://fuadinaqi:fuadiganteng@ds251598.mlab.com:51598/kandang')
 
 var users = require('./routes/users');
 var questions = require('./routes/questions')
